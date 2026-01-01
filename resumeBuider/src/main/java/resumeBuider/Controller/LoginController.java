@@ -6,7 +6,7 @@ import resumeBuider.Repository.UserLoginRepository;
 import resumeBuider.model.UserLogin;
 
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
