@@ -1,35 +1,13 @@
-FROM ubuntu:latest
-LABEL authors="maharudra Yadav"
-# Build stage
-FROM maven:3.8.7-eclipse-temurin-17 AS build
+# Change this line to use JDK 21
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-# Set the working directory
 WORKDIR /app
+COPY . .
 
-# Copy the entire project into the container
-COPY . /app
-
-# Build the app
+# This command should now succeed
 RUN mvn -f /app/pom.xml clean package -DskipTests
 
-# Run stage
-FROM eclipse-temurin:17-jdk-jammy
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the built JAR file from the build stage
+# Run stage (Make sure this also uses Java 21)
+FROM eclipse-temurin:21-jre
 COPY --from=build /app/target/*.jar app.jar
-
-# Expose port 80 for Railway
-EXPOSE 80
-
-# Run the application on port 80
-ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=80"]
-
-
-
-
-
-
-
+ENTRYPOINT ["java", "-jar", "app.jar"]
